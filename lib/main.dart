@@ -512,7 +512,7 @@ class _HomePageState extends State<HomePage> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/doc.png'),
+                image: AssetImage('assets/lab.png'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -525,17 +525,6 @@ class _HomePageState extends State<HomePage> {
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(height: 20),
-                Text(
-                  'Welcome to Chedrick Laboratory and Diagnostic Center',
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 190, 190, 195),
-                  ),
-                ),
-              ],
             ),
           ),
         ],
@@ -543,7 +532,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
 
 
 class HomePageContent extends StatelessWidget {
@@ -555,38 +543,36 @@ class HomePageContent extends StatelessWidget {
         backgroundColor: Colors.blue,
       ),
       body: Container(
-        color: Colors.white, // Set the background color to white
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Welcome to Chedrick Laboratory and Diagnostic Center',
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 5, 0, 0),
-                  ),
-                ),
-                SizedBox(height: 20), // Add some spacing between the texts
-                Text(
-                  'Chedrick Laboratory and Diagnostic Center (CLDC) is one of the institutions in the field of medical examination and research. It was established in J.P. Rizal Cor. F Mangobos St. Poblacion 1, Bauan, Batangas in 2019.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
+        color: Colors.white,
+        padding: EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Welcome to Chedrick Laboratory and Diagnostic Center',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: Color.fromARGB(255, 5, 0, 0),
+              ),
             ),
-          ),
+            SizedBox(height: 20),
+            Text(
+              'Chedrick Laboratory and Diagnostic Center (CLDC) is one of the institutions in the field of medical examination and research. It was established in J.P. Rizal Cor. F Mangobos St. Poblacion 1, Bauan, Batangas in 2019.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black87,
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
+
 
 
 class ServiceScreen extends StatelessWidget {
@@ -715,97 +701,130 @@ class _PatientInformationScreenState extends State<PatientInformationScreen> {
   bool _sendCopy = false;
 
   _selectDate(BuildContext context, int index) async {
-    DateTime now = DateTime.now();
-    DateTime firstDate = DateTime(2023, 1, 1);
-    DateTime lastDate = DateTime(2024, 12, 31);
+  DateTime now = DateTime.now();
+  DateTime firstDate = DateTime(2023, 1, 1);
+  DateTime lastDate = DateTime(2024, 12, 31);
 
-    DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _selectedDates[index] ?? now,
-      firstDate: firstDate,
-      lastDate: lastDate,
-      selectableDayPredicate: (DateTime day) {
-        // Disable all days in August
-        if (day.month == DateTime.august) {
-          return false;
-        }
-        // Allow only Monday to Saturday (1 to 6 in DateTime.weekday)
-        return day.weekday >= DateTime.monday && day.weekday <= DateTime.saturday;
-      },
-    );
+  // Define the list of unavailable dates in August
+  Set<int> unavailableDates = {1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 20, 21, 24, 25};
 
-    if (picked != null && picked != _selectedDates[index]) {
-      if (picked.month == DateTime.august) {
-        // Show "Fully Booked" message for August dates
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('August ${picked.day}, ${picked.year} is Fully Booked.'),
-            duration: Duration(seconds: 2),
-          ),
-        );
-      } else {
-        setState(() {
-          _selectedDates[index] = picked;
-        });
-
-        // Show notification or feedback about selected date
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Selected date: ${picked.toString().split(' ')[0]}'),
-            duration: Duration(seconds: 2),
-          ),
-        );
+  DateTime? picked = await showDatePicker(
+    context: context,
+    initialDate: _selectedDates[index] ?? now,
+    firstDate: firstDate,
+    lastDate: lastDate,
+    selectableDayPredicate: (DateTime day) {
+      // Disable the specific dates in August
+      if (day.month == DateTime.august && unavailableDates.contains(day.day)) {
+        return false;
       }
+      // Allow only Monday to Saturday (1 to 6 in DateTime.weekday)
+      return day.weekday >= DateTime.monday && day.weekday <= DateTime.saturday;
+    },
+  );
+
+  if (picked != null && picked != _selectedDates[index]) {
+    if (picked.month == DateTime.august && unavailableDates.contains(picked.day)) {
+      // Show "Fully Booked" message for the unavailable August dates
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('August ${picked.day}, ${picked.year} is Fully Booked.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    } else {
+      setState(() {
+        _selectedDates[index] = picked;
+      });
+
+      // Show notification or feedback about selected date
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Selected date: ${picked.toString().split(' ')[0]}'),
+          duration: Duration(seconds: 2),
+        ),
+      );
     }
   }
+}
+
 
   _selectTime(BuildContext context, int index) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: _selectedTimes[index] ?? TimeOfDay.now(),
-      builder: (BuildContext context, Widget? child) {
-        return MediaQuery(
-          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
-          child: child!,
-        );
-      },
-    );
+  final TimeOfDay? picked = await showTimePicker(
+    context: context,
+    initialTime: _selectedTimes[index] ?? TimeOfDay.now(),
+    builder: (BuildContext context, Widget? child) {
+      return MediaQuery(
+        data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+        child: child!,
+      );
+    },
+  );
 
-    if (picked != null) {
-      // Check if selected time is within the allowed range (7:00 AM to 4:00 PM)
-      TimeOfDay earliestAllowedTime = TimeOfDay(hour: 7, minute: 0);
-      TimeOfDay latestAllowedTime = TimeOfDay(hour: 16, minute: 0);
+  if (picked != null) {
+    // Define allowed time range
+    TimeOfDay earliestAllowedTime = TimeOfDay(hour: 7, minute: 0);
+    TimeOfDay latestAllowedTime = TimeOfDay(hour: 16, minute: 0);
 
-      if (picked.hour < earliestAllowedTime.hour ||
-          (picked.hour == earliestAllowedTime.hour && picked.minute < earliestAllowedTime.minute) ||
-          picked.hour > latestAllowedTime.hour ||
-          (picked.hour == latestAllowedTime.hour && picked.minute > latestAllowedTime.minute)) {
-        // Time is outside allowed range
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Time is not Available'),
-              content: Text('Selected time must be between 7:00 AM and 4:00 PM.'),
-              actions: <Widget>[
-                TextButton(
-                  child: Text('OK'),
-                  onPressed: () {
-                    Navigator.of(context).pop(); // Close the dialog
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      } else {
-        // Time is within allowed range, update the selected time
-        setState(() {
-          _selectedTimes[index] = picked;
-        });
-      }
+    // Define lunch break time
+    TimeOfDay lunchBreakStart = TimeOfDay(hour: 12, minute: 0);
+    TimeOfDay lunchBreakEnd = TimeOfDay(hour: 13, minute: 0);
+
+    // Convert TimeOfDay to minutes since midnight for easier comparison
+    int pickedInMinutes = picked.hour * 60 + picked.minute;
+    int lunchBreakStartInMinutes = lunchBreakStart.hour * 60 + lunchBreakStart.minute;
+    int lunchBreakEndInMinutes = lunchBreakEnd.hour * 60 + lunchBreakEnd.minute;
+    int earliestAllowedInMinutes = earliestAllowedTime.hour * 60 + earliestAllowedTime.minute;
+    int latestAllowedInMinutes = latestAllowedTime.hour * 60 + latestAllowedTime.minute;
+
+    // Check if selected time is during lunch break
+    if (pickedInMinutes >= lunchBreakStartInMinutes && pickedInMinutes < lunchBreakEndInMinutes) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Lunch Break'),
+            content: Text('The selected time is during lunch break (12:00 PM to 1:00 PM). Please choose a different time.'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } 
+    // Check if selected time is within the allowed range
+    else if (pickedInMinutes < earliestAllowedInMinutes || pickedInMinutes > latestAllowedInMinutes) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Time is not Available'),
+            content: Text('Selected time must be between 7:00 AM and 4:00 PM.'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      // Time is within allowed range and not during lunch break, update the selected time
+      setState(() {
+        _selectedTimes[index] = picked;
+      });
     }
   }
+}
+
 
   _addAppointment() {
     setState(() {
@@ -875,7 +894,7 @@ class _PatientInformationScreenState extends State<PatientInformationScreen> {
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: Text('Yes'),
+              child: Text('Yes, Submit'),
             ),
           ],
         );
