@@ -59,7 +59,7 @@ class WelcomeScreen extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue, // Background color
+                    backgroundColor: const Color.fromARGB(255, 144, 170, 191), // Background color
                     foregroundColor: Colors.black, // Text color
                   ),
                   child: Text('Login'),
@@ -73,7 +73,7 @@ class WelcomeScreen extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue, // Background color
+                    backgroundColor: const Color.fromARGB(255, 144, 170, 191), // Background color
                     foregroundColor: Colors.black, // Text color
                   ),
                   child: Text('Sign Up'),
@@ -199,6 +199,10 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(height: 10),
               ElevatedButton(
                 onPressed: _login,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromARGB(255, 192, 198, 204), // Background color
+                  foregroundColor: Colors.black, // Text color
+                ),
                 child: Text('Login'),
               ),
               TextButton(
@@ -359,6 +363,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _signUp,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromARGB(255, 192, 198, 204), // Background color
+                  foregroundColor: Colors.black, // Text color
+                ),
                 child: Text('Sign Up'),
               ),
               TextButton(
@@ -374,6 +382,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 }
+
 
 
 class HomePage extends StatefulWidget {
@@ -517,17 +526,13 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(
-                  '', // Replace with your image asset
-                  height: 150, // Adjust the height as needed
-                ),
                 SizedBox(height: 20),
                 Text(
                   'Welcome to Chedrick Laboratory and Diagnostic Center',
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 29, 32, 209),
+                    color: Color.fromARGB(255, 190, 190, 195),
                   ),
                 ),
               ],
@@ -633,11 +638,13 @@ class ServiceScreen extends StatelessWidget {
                   ),
                 );
               },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color.fromARGB(255, 144, 170, 191), // Set background color
+              ),
               child: Text(
-              'Book an Appointment',
-                style: TextStyle(color: Colors.black), // Set text color to black
-),
-
+                'Book an Appointment',
+                style: TextStyle(color: Colors.black),
+              ),
             ),
             SizedBox(height: 20),
           ],
