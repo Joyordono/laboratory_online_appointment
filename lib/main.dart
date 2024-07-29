@@ -911,7 +911,7 @@ class _PatientInformationScreenState extends State<PatientInformationScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Notification Sent '),
+          title: Text('Notification and Application Sent'),
           actions: <Widget>[
             TextButton(
               child: Text('OK'),
